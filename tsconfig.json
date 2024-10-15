@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/explore/[id]/page.jsx",
+    "app/map/sidebar.jsx",
+    "app/explore/[id]/eventDetail.jsx",
+    "app/map/mapView.tsx"
+, "app/explore/main.jsx", "app/hooks/useData.js", "app/m.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
