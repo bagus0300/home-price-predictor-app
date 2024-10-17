@@ -1,12 +1,17 @@
 "use client";
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import moment from "moment";
 import axios from "axios";
-import {getHomeData} from '../../util/gethomedata'
-import { Slice } from 'lucide-react';
+import { getHomeData } from "../../util/gethomedata";
+import { Slice } from "lucide-react";
 
 const DataContext = createContext();
-
 
 export const HomeDataProvider = ({ children }) => {
   const [data, setHomeData] = useState([]);
@@ -16,11 +21,15 @@ export const HomeDataProvider = ({ children }) => {
     setLoading(true);
     try {
       // Check if we have cached data
-      const cachedData = localStorage.getItem('cachedData');
-      const cachedTimestamp = localStorage.getItem('cachedTimestamp');
+      const cachedData = localStorage.getItem("cachedData");
+      const cachedTimestamp = localStorage.getItem("cachedTimestamp");
 
       // If we have cached data and it's less than 1 hour old, use it
-      if (cachedData && cachedTimestamp && (Date.now() - parseInt(cachedTimestamp)) < 360000) {
+      if (
+        cachedData &&
+        cachedTimestamp &&
+        Date.now() - parseInt(cachedTimestamp) < 360000
+      ) {
         setHomeData(JSON.parse(cachedData));
         setLoading(false);
         return;
@@ -39,10 +48,10 @@ export const HomeDataProvider = ({ children }) => {
       }
 
       const combinedData = shuffleArray(homeData);
-      
+
       // Cache the data and timestamp
-      localStorage.setItem('cachedData', JSON.stringify(combinedData));
-      localStorage.setItem('cachedTimestamp', Date.now().toString());
+      localStorage.setItem("cachedData", JSON.stringify(combinedData));
+      localStorage.setItem("cachedTimestamp", Date.now().toString());
 
       setHomeData(combinedData);
     } catch (error) {
@@ -66,7 +75,7 @@ export const HomeDataProvider = ({ children }) => {
 export const useData = () => {
   const context = useContext(DataContext);
   if (context === undefined) {
-    throw new Error('useData must be used within an DataProvider');
+    throw new Error("useData must be used within an DataProvider");
   }
   return context;
 };

@@ -15,11 +15,11 @@ def setup_driver():
     driver = webdriver.Chrome(options=chrome_options)
     return driver
 
-def create_json(filename='redfin_properties.json'):
+def create_json(filename='home_data.json'):
     with open(filename, 'w', encoding='utf-8') as jsonfile:
         json.dump([], jsonfile)
 
-def append_to_json(property_data, filename='redfin_properties.json'):
+def append_to_json(property_data, filename='home_data.json'):
     with open(filename, 'r+', encoding='utf-8') as jsonfile:
         data = json.load(jsonfile)
         data.append(property_data)
@@ -27,7 +27,7 @@ def append_to_json(property_data, filename='redfin_properties.json'):
         json.dump(data, jsonfile, indent=2)
         jsonfile.truncate()
 
-def scrape_redfin_properties(driver, url, json_filename):
+def scrape_redfin_properties(driver, url, json_filename, city_name):
     driver.get(url)
     time.sleep(5)  # Wait for the page to load
     
@@ -45,7 +45,10 @@ def scrape_redfin_properties(driver, url, json_filename):
         for card in property_cards:
             try:
                 home_url = card.find_element(By.CSS_SELECTOR, "a.link-and-anchor").get_attribute("href")
-                image_link = card.find_element(By.CSS_SELECTOR, "img.bp-Homecard__Photo--image").get_attribute("src")
+                try:
+                    image_link = card.find_element(By.CSS_SELECTOR, "img.bp-Homecard__Photo--image").get_attribute("src")
+                except NoSuchElementException:
+                    image_link = "https://ssl.cdn-redfin.com/photo/92/islphoto/870/genIslnoResize.3231870_0.jpg"
                 address = card.find_element(By.CSS_SELECTOR, "div.bp-Homecard__Address").text
                 price = card.find_element(By.CSS_SELECTOR, "span.bp-Homecard__Price--value").text
                 stats = card.find_element(By.CSS_SELECTOR, "div.bp-Homecard__Stats")
@@ -61,6 +64,7 @@ def scrape_redfin_properties(driver, url, json_filename):
                     'beds': beds,
                     'baths': baths,
                     'area': area,
+                    'city' : city_name
                 }
                 
                 append_to_json(property_data, json_filename)
@@ -68,7 +72,11 @@ def scrape_redfin_properties(driver, url, json_filename):
                 print(f"Property {properties_count} scraped and saved.")
             
             except Exception as e:
-                print(f"Error scraping property: {e}")
+                if home_url:
+                    print(f"Error scraping property: {home_url}")
+                else:
+                    print("Error scraping property: Unable to retrieve home URL")
+                print(f"Error details:")
         
         # Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -84,24 +92,41 @@ def scrape_redfin_properties(driver, url, json_filename):
     return properties_count
 
 # Main execution
-base_url = "https://www.redfin.com/city/30818/TX/Austin"
+base_urls = [
+    "https://www.redfin.com/city/30818/TX/Austin",
+    "https://www.redfin.com/city/30749/NY/New-York",
+    "https://www.redfin.com/city/11203/CA/Los-Angeles",
+    "https://www.redfin.com/city/16338/SD/Toronto",
+    "https://www.redfin.com/city/12839/DC/Washington-DC",
+    "",
+    "",
+    ""
+]
 driver = setup_driver()
-json_filename = 'redfin_properties.json'
+json_filename = 'home_data.json'
 create_json(json_filename)
 total_properties = 0
 
 try:
-    for page in range(1, 10):  # This will scrape pages 1 through 9
-        url = f"{base_url}/page-{page}" if page > 1 else base_url
-        print(f"Scraping page {page}...")
-        properties_count = scrape_redfin_properties(driver, url, json_filename)
+    for base_url in base_urls:
+        city_name = base_url.split('/')[-1]
+        print(f"Scraping properties in {city_name}")
         
-        total_properties += properties_count
-        print(f"Total properties scraped: {total_properties}")
+        for page in range(1, 8):  # This will scrape pages 1 through 9
+            url = f"{base_url}/page-{page}" if page > 1 else base_url
+            print(f"Scraping {city_name} - page {page}...")
+            properties_count = scrape_redfin_properties(driver, url, json_filename, city_name)
+            
+            total_properties += properties_count
+            print(f"Total properties scraped in {city_name}: {properties_count}")
+            print(f"Total properties scraped overall: {total_properties}")
+            
+            if page < 8:
+                print("Waiting 5 seconds before moving to the next page...")
+                time.sleep(5)  # Add a delay between pages to be more respectful to the server
         
-        if page < 9:
-            print("Waiting 5 seconds before moving to the next page...")
-            time.sleep(5)  # Add a delay between pages to be more respectful to the server
+        print(f"Finished scraping {city_name}. Waiting 10 seconds before moving to the next city...")
+        time.sleep(10)  # Add a longer delay between cities
 
 finally:
     driver.quit()

@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export const Navigation: React.FC = () => {
@@ -13,11 +13,11 @@ export const Navigation: React.FC = () => {
   const [isIntersecting, setIntersecting] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
-  
+
   useEffect(() => {
     if (!ref.current) return;
     const observer = new IntersectionObserver(([entry]) =>
-      setIntersecting(entry.isIntersecting),
+      setIntersecting(entry.isIntersecting)
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
@@ -27,38 +27,36 @@ export const Navigation: React.FC = () => {
     if (session) {
       signOut();
     } else {
-      signIn('google');
+      signIn("google");
     }
   };
 
   return (
-    <header style={{fontFamily : 'Exo'}} ref={ref}>
+    <header style={{ fontFamily: "Exo" }} ref={ref}>
       <div
         className={classNames(
           "fixed inset-x-0 top-0 z-50 backdrop-blur duration-200 border-b",
           isIntersecting
             ? "bg-zinc-900/50 border-transparent"
             : "bg-zinc-900/500 border-zinc-800"
-        )}
-      >
-        <div className="container flex flex-row items-center justify-between py-4 mx-auto px-4">
+        )}>
+        <div className="container flex flex-row items-center py-4 mx-auto px-4">
           <Link
             href="/explore"
-            className="duration-200 text-violet-500 hover:text-zinc-100 text-4xl md:text-5xl font-bold whitespace-nowrap"
-          >
+            className="duration-200 text-violet-500 hover:text-zinc-100 text-4xl md:text-5xl font-bold whitespace-nowra">
             {/* World Home Price Predictor */}
             WHPPor
           </Link>
-          
+
           {/* Mobile menu button */}
-          <button 
+          {/* <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-violet-500 hover:text-zinc-100"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
-          </button>
+          </button> */}
 
           {/* Desktop Navigation */}
           {/* <div className="hidden md:flex flex-row justify-between items-center w-full ml-8">
@@ -119,5 +117,5 @@ export const Navigation: React.FC = () => {
         )} */}
       </div>
     </header>
-  )
-}
+  );
+};
