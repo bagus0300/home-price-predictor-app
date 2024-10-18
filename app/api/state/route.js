@@ -4,11 +4,7 @@ import path from "path";
 
 export async function GET() {
   try {
-    const filePath = path.join(
-      process.cwd(),
-      "script",
-      "home_analyze_data.json"
-    );
+    const filePath = path.join(process.cwd(), "script", "state_data.json");
     const jsonData = await fs.readFile(filePath, "utf8");
     const stateData = JSON.parse(jsonData);
     const getCity = (location) => {
