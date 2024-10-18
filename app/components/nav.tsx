@@ -32,7 +32,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <header style={{ fontFamily: "Exo" }} ref={ref}>
+    <header style={{ fontFamily: "Helvetica" }} ref={ref}>
       <div
         className={classNames(
           "fixed inset-x-0 top-0 z-50 backdrop-blur duration-200 border-b",
@@ -43,7 +43,7 @@ export const Navigation: React.FC = () => {
         <div className="container flex flex-row items-center py-4 mx-auto px-4">
           <Link
             href="/explore"
-            className="duration-200 text-violet-500 hover:text-zinc-100 text-4xl md:text-5xl font-bold whitespace-nowra">
+            className="duration-200 text-green-500 hover:text-zinc-100 text-4xl md:text-5xl font-bold whitespace-nowra">
             {/* World Home Price Predictor */}
             WHPPor
           </Link>

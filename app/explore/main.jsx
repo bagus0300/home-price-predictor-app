@@ -125,13 +125,13 @@ export const MainPage = () => {
   };
 
   const inputStyle = {
-    fontFamily: "Exo",
+    fontFamily: "Helvetica",
     height: "40px",
     fontSize: "16px",
   };
 
   return (
-    <div style={{ fontFamily: "Exo" }}>
+    <div style={{ fontFamily: "Helvetica" }}>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
@@ -217,7 +217,7 @@ export const MainPage = () => {
                 type="default"
                 size="large"
                 className="bg-purple-800 text-white hover:bg-purple-900 px-8"
-                style={{ fontFamily: "Exo" }}
+                style={{ fontFamily: "Helvetica" }}
               >
                 Search
               </Button>
@@ -226,7 +226,7 @@ export const MainPage = () => {
                 type="default"
                 size="large"
                 className="bg-purple-800 text-white hover:bg-purple-900 px-8"
-                style={{ fontFamily: "Exo" }}
+                style={{ fontFamily: "Helvetica" }}
               >
                 Clear
               </Button>
@@ -235,7 +235,7 @@ export const MainPage = () => {
           {selectedCityData && (
             <div
               className="w-full max-w-4xl mt-4 p-4 bg-gray-800 rounded-lg"
-              style={{ fontFamily: "Exo" }}
+              style={{ fontFamily: "Helvetica" }}
             >
               <h2 className="text-xl font-semibold text-white mb-2">
                 {selectedCityData.city}, {selectedCityData.state}
