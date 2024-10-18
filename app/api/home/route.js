@@ -7,6 +7,7 @@ export async function GET() {
     const filePath = path.join(process.cwd(), "script", "home_data.json");
     const jsonData = await fs.readFile(filePath, "utf8");
     const homeData = JSON.parse(jsonData);
+
     const getHomeIdFromUrl = (url) => {
       const idRegex = /\/home\/(\d+)$/;
       const match = url.match(idRegex);
@@ -21,20 +22,25 @@ export async function GET() {
       return null;
     };
 
-    const formattedHomeData = homeData.map((home) => {
-      return {
-        id: getHomeIdFromUrl(home?.home_url),
-        home_url: home?.home_url,
-        image_link: home?.image_link,
-        address: home?.address,
-        city: getCityFromAddress(home?.address),
-        price: home?.price,
-        beds: home?.beds,
-        baths: home?.baths,
-        area: home?.area,
-        city: home?.city,
-      };
-    });
+    const formattedHomeData = homeData
+      .filter(
+        (home) =>
+          home.image_link !==
+          "https://ssl.cdn-redfin.com/photo/92/islphoto/870/genIslnoResize.3231870_0.jpg"
+      )
+      .map((home) => {
+        return {
+          id: getHomeIdFromUrl(home?.home_url),
+          home_url: home?.home_url,
+          image_link: home?.image_link,
+          address: home?.address,
+          city: getCityFromAddress(home?.address) || home?.city,
+          price: home?.price,
+          beds: home?.beds,
+          baths: home?.baths,
+          area: home?.area,
+        };
+      });
 
     return NextResponse.json(formattedHomeData);
   } catch (error) {
