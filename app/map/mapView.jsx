@@ -5,19 +5,16 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { AutoComplete, Input } from 'antd';
 import Link from 'next/link'
 import debounce from 'lodash/debounce';
-import { useEvents } from '../hooks/useData';
 
 const MapView = ({ web3eventMap }) => {
-    
-    const { events, loading } = useEvents();
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-    
-    const [ pageIsMounted, setPageIsMounted ] = useState(false);
-    const [ map, setMap ] = useState(null);
+
+    const [pageIsMounted, setPageIsMounted] = useState(false);
+    const [map, setMap] = useState(null);
     const [popup, setPopup] = useState(null);
     const [locationOptions, setLocationOptions] = useState([]);
-    console.log(web3eventMap.slice(0,3), '==================')
+    console.log(web3eventMap.slice(0, 3), '==================')
 
     useEffect(() => {
         setPageIsMounted(true);
@@ -29,11 +26,11 @@ const MapView = ({ web3eventMap }) => {
             zoom: 4,
             attributionControl: false,
         });
-    
+
         map.addControl(
-            new mapboxgl.NavigationControl({showCompass:false})
+            new mapboxgl.NavigationControl({ showCompass: false })
         );
-        
+
         initializeMap(map);
         setMap(map);
 
@@ -41,7 +38,7 @@ const MapView = ({ web3eventMap }) => {
             map.remove();
         }
     }, []);
-    
+
     useEffect(() => {
         if (pageIsMounted && map && web3eventMap) {
             const data = convertPreDataToGeoJSON(web3eventMap);
@@ -51,16 +48,16 @@ const MapView = ({ web3eventMap }) => {
             })
         }
     }, [pageIsMounted, map, web3eventMap]);
-    
+
     const web3eventListClickHandle = (event) => {
         if (!map) return;
-    
+
         const coordinates = [event._embedded?.venues[0]?.location?.longitude, event._embedded?.venues[0]?.location?.latitude];
         map.flyTo({
             center: coordinates,
             zoom: 12,
         });
-    
+
         const popupContent = `
             <div class="popup-container">
                 <div class="event-content">
@@ -117,7 +114,7 @@ const MapView = ({ web3eventMap }) => {
 
     const handleLocationSelect = (value, option) => {
         if (!map) return;
-        
+
         map.flyTo({
             center: option.coordinates,
             zoom: 5
@@ -127,8 +124,8 @@ const MapView = ({ web3eventMap }) => {
     return (
         <div className="px-6 mx-auto max-w-[100rem] lg:px-8 pt-[70px] h-screen">
             <div className="w-full flex pt-3">
-                <SideBar 
-                    web3eventMap={web3eventMap} 
+                <SideBar
+                    web3eventMap={web3eventMap}
                     onTitleClick={web3eventListClickHandle}
                     fetchLocationSuggestions={fetchLocationSuggestions}
                     locationOptions={locationOptions}
@@ -156,8 +153,8 @@ const addDataLayer = (map, data) => {
         'source': 'web3events',
         'filter': ['has', 'point_count'],
         'paint': {
-            'circle-color':'#5c1b92',
-            'circle-radius':12
+            'circle-color': '#5c1b92',
+            'circle-radius': 12
         }
     });
 
@@ -169,7 +166,7 @@ const addDataLayer = (map, data) => {
         'layout': {
             'text-field': ['get', 'point_count_abbreviated'],
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 14,        
+            'text-size': 14,
         },
         'paint': {
             'text-color': '#ffff00',
@@ -185,7 +182,7 @@ const addDataLayer = (map, data) => {
             'circle-color': '#ed60e7',
             'circle-radius': 6,
             'circle-stroke-width': 1,
-            'circle-stroke-color': '#fff'            
+            'circle-stroke-color': '#fff'
         }
     });
 
@@ -199,7 +196,7 @@ const addDataLayer = (map, data) => {
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
             'text-size': 14,
             'text-offset': [0.5, 0],
-            'text-anchor': 'top-left'     
+            'text-anchor': 'top-left'
         },
         'paint': {
             'text-color': '#ffff00',
@@ -212,7 +209,7 @@ const initializeMap = (map) => {
         const features = map.queryRenderedFeatures(e.point, {
             layers: ['clusters']
         });
-        
+
         const clusterId = features[0]?.properties?.cluster_id;
         const point_count = features[0]?.properties?.point_count;
         const coordinates = e.lngLat;
@@ -223,7 +220,7 @@ const initializeMap = (map) => {
                 return;
             }
             const clusteredWeb3events = events;
-            
+
             let popupHTML = '<div class="popup-container">';
             let count = 0;
 
@@ -248,26 +245,26 @@ const initializeMap = (map) => {
             });
 
             popupHTML += '</div>';
-    
+
             new mapboxgl.Popup({
                 closeButton: false,
                 className: 'custom-popup',
             })
-            .setLngLat(coordinates)
-            .setHTML(popupHTML)
-            .addTo(map);
+                .setLngLat(coordinates)
+                .setHTML(popupHTML)
+                .addTo(map);
         });
 
         map.easeTo({
             center: coordinates
         });
     });
-        
+
     map.on('click', 'unclustered-point', (e) => {
         const features = map.queryRenderedFeatures(e.point, {
             layers: ['unclustered-point']
         });
-        
+
         const coordinates = e.lngLat;
         const web3eventProperty = features[0]?.properties;
 
@@ -294,9 +291,9 @@ const initializeMap = (map) => {
             closeButton: false,
             className: 'custom-popup',
         })
-        .setLngLat(coordinates)
-        .setHTML(popupHTML)
-        .addTo(map);
+            .setLngLat(coordinates)
+            .setHTML(popupHTML)
+            .addTo(map);
 
         map.easeTo({
             center: coordinates
@@ -309,7 +306,7 @@ const initializeMap = (map) => {
 
     map.on('mouseleave', 'clusters', () => {
         map.getCanvas().style.cursor = '';
-    });  
+    });
 
     map.on('mouseenter', 'unclustered-point', () => {
         map.getCanvas().style.cursor = 'pointer';
@@ -317,30 +314,30 @@ const initializeMap = (map) => {
 
     map.on('mouseleave', 'unclustered-point', () => {
         map.getCanvas().style.cursor = '';
-    }); 
+    });
 }
 
-const SideBar = ({ 
-    web3eventMap, 
-    onTitleClick, 
+const SideBar = ({
+    web3eventMap,
+    onTitleClick,
     fetchLocationSuggestions,
     locationOptions,
     handleLocationSelect
-}) => {  
-    const [ filterEvent, setFilterEvent ] = useState(web3eventMap);
-    const options = web3eventMap.map((event) => ({ 
+}) => {
+    const [filterEvent, setFilterEvent] = useState(web3eventMap);
+    const options = web3eventMap.map((event) => ({
         value: event?.name,
         event: event
     }));
 
-const inputStyle = {
-      fontFamily: 'Exo',
-      height: '40px',
-      fontSize: '16px',
+    const inputStyle = {
+        fontFamily: 'Exo',
+        height: '40px',
+        fontSize: '16px',
     };
-    
+
     return (
-        <div className="w-[450px] h-[88vh] bg-black py-2" style={{fontFamily :'Exo'}}>
+        <div className="w-[450px] h-[88vh] bg-black py-2" style={{ fontFamily: 'Exo' }}>
             <div className="h-[120px] px-2 py-2 flex flex-col justify-center items-center">
                 <AutoComplete
                     popupClassName="certain-category-search-dropdown"
@@ -355,7 +352,7 @@ const inputStyle = {
                         onTitleClick(option.event);
                     }}
                 >
-                    <Input size="large" placeholder="Search by title" style={inputStyle}/>
+                    <Input size="large" placeholder="Search by title" style={inputStyle} />
                 </AutoComplete>
                 <AutoComplete
                     style={{ width: 250 }}
@@ -363,7 +360,7 @@ const inputStyle = {
                     onSearch={fetchLocationSuggestions}
                     onSelect={handleLocationSelect}
                 >
-                    <Input size="large" placeholder="Search by city" style={inputStyle}/>
+                    <Input size="large" placeholder="Search by city" style={inputStyle} />
                 </AutoComplete>
             </div>
             <div className="w-full h-[calc(88vh-136px)] px-2 overflow-y-auto scroll grid gap-2">
