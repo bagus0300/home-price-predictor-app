@@ -22,27 +22,36 @@ export async function GET() {
       return null;
     };
 
+    // Create a Map to store unique homes by URL
+    const uniqueHomes = new Map();
+
     const formattedHomeData = homeData
       .filter(
         (home) =>
           home.image_link !==
           "https://ssl.cdn-redfin.com/photo/92/islphoto/870/genIslnoResize.3231870_0.jpg"
       )
-      .map((home) => {
-        return {
-          id: getHomeIdFromUrl(home?.home_url),
-          home_url: home?.home_url,
-          image_link: home?.image_link,
-          address: home?.address,
-          city: getCityFromAddress(home?.address) || home?.city,
-          price: home?.price,
-          beds: home?.beds,
-          baths: home?.baths,
-          area: home?.area,
-        };
+      .forEach((home) => {
+        // Only keep the first occurrence of each home_url
+        if (!uniqueHomes.has(home.home_url)) {
+          uniqueHomes.set(home.home_url, {
+            id: getHomeIdFromUrl(home?.home_url),
+            home_url: home?.home_url,
+            image_link: home?.image_link,
+            address: home?.address,
+            city: getCityFromAddress(home?.address) || home?.city,
+            price: home?.price,
+            beds: home?.beds,
+            baths: home?.baths,
+            area: home?.area,
+          });
+        }
       });
 
-    return NextResponse.json(formattedHomeData);
+    // Convert Map values to array
+    const uniqueHomeArray = Array.from(uniqueHomes.values());
+
+    return NextResponse.json(uniqueHomeArray);
   } catch (error) {
     console.error("Error reading or parsing home data:", error);
     return NextResponse.json(
