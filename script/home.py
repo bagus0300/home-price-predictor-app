@@ -37,6 +37,88 @@ def append_to_json(property_data, filename='home_data.json'):
     except Exception as e:
         print(f"Error appending to JSON: {str(e)}")
 
+# def scrape_redfin_properties(driver, url, json_filename, city_name):
+#     if driver is None:
+#         print("Driver not initialized. Skipping URL:", url)
+#         return 0
+        
+#     properties_count = 0
+#     try:
+#         driver.get(url)
+#         time.sleep(5)  # Wait for the page to load
+        
+#         last_height = driver.execute_script("return document.body.scrollHeight")
+        
+#         while True:
+#             try:
+#                 # Wait for the property cards to load
+#                 WebDriverWait(driver, 10).until(
+#                     EC.presence_of_element_located((By.CSS_SELECTOR, "div.MapHomeCardReact"))
+#                 )
+                
+#                 property_cards = driver.find_elements(By.CSS_SELECTOR, "div.MapHomeCardReact")
+                
+#                 for card in property_cards:
+#                     try:
+#                         home_url = card.find_element(By.CSS_SELECTOR, "a.link-and-anchor").get_attribute("href")
+#                         try:
+#                             image_link = card.find_element(By.CSS_SELECTOR, "img.bp-Homecard__Photo--image").get_attribute("src")
+#                         except NoSuchElementException:
+#                             image_link = "https://ssl.cdn-redfin.com/photo/92/islphoto/870/genIslnoResize.3231870_0.jpg"
+                        
+#                         try:
+#                             address = card.find_element(By.CSS_SELECTOR, "div.bp-Homecard__Address").text
+#                             price = card.find_element(By.CSS_SELECTOR, "span.bp-Homecard__Price--value").text
+#                             stats = card.find_element(By.CSS_SELECTOR, "div.bp-Homecard__Stats")
+#                             beds = stats.find_element(By.CSS_SELECTOR, "span.bp-Homecard__Stats--beds").text
+#                             baths = stats.find_element(By.CSS_SELECTOR, "span.bp-Homecard__Stats--baths").text
+#                             area = stats.find_element(By.CSS_SELECTOR, "span.bp-Homecard__LockedStat--value").text
+                            
+#                             property_data = {
+#                                 'home_url': home_url,
+#                                 'image_link': image_link,
+#                                 'address': address,
+#                                 'price': price,
+#                                 'beds': beds,
+#                                 'baths': baths,
+#                                 'area': area,
+#                                 'city': city_name
+#                             }
+                            
+#                             append_to_json(property_data, json_filename)
+#                             properties_count += 1
+#                             print(f"Property {properties_count} scraped and saved.")
+                            
+#                         except NoSuchElementException as e:
+#                             print(f"Skipping property due to missing data: {str(e)}")
+#                             continue
+                            
+#                     except Exception as e:
+#                         print(f"Error scraping individual property: {str(e)}")
+#                         continue
+                
+#                 # Scroll down to bottom
+#                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#                 time.sleep(2)
+                
+#                 # Calculate new scroll height and compare with last scroll height
+#                 new_height = driver.execute_script("return document.body.scrollHeight")
+#                 if new_height == last_height:
+#                     break
+#                 last_height = new_height
+                
+#             except TimeoutException:
+#                 print(f"Timeout while loading property cards for {url}. Moving to next page.")
+#                 break
+                
+#     except WebDriverException as e:
+#         print(f"WebDriver error for {url}: {str(e)}")
+#     except Exception as e:
+#         print(f"Unexpected error while scraping {url}: {str(e)}")
+    
+#     return properties_count
+
+
 def scrape_redfin_properties(driver, url, json_filename, city_name):
     if driver is None:
         print("Driver not initialized. Skipping URL:", url)
@@ -61,6 +143,7 @@ def scrape_redfin_properties(driver, url, json_filename, city_name):
                 for card in property_cards:
                     try:
                         home_url = card.find_element(By.CSS_SELECTOR, "a.link-and-anchor").get_attribute("href")
+                        
                         try:
                             image_link = card.find_element(By.CSS_SELECTOR, "img.bp-Homecard__Photo--image").get_attribute("src")
                         except NoSuchElementException:
@@ -74,6 +157,35 @@ def scrape_redfin_properties(driver, url, json_filename, city_name):
                             baths = stats.find_element(By.CSS_SELECTOR, "span.bp-Homecard__Stats--baths").text
                             area = stats.find_element(By.CSS_SELECTOR, "span.bp-Homecard__LockedStat--value").text
                             
+                            # Extract JSON-LD data from the card
+                            try:
+                                script_element = card.find_element(By.XPATH, ".//script[@type='application/ld+json']")
+                                json_ld_content = script_element.get_attribute('innerHTML')
+                                json_ld_data = json.loads(json_ld_content)
+                                
+                                # Extract relevant information from JSON-LD
+                                property_details = json_ld_data[0]  # Assuming the first object contains property details
+                                latitude = property_details.get('geo', {}).get('latitude')
+                                longitude = property_details.get('geo', {}).get('longitude')
+                                floor_size = property_details.get('floorSize', {}).get('value')
+                                number_of_rooms = property_details.get('numberOfRooms')
+                                
+                                # Extract address details
+                                address_details = property_details.get('address', {})
+                                street_address = address_details.get('streetAddress')
+                                address_locality = address_details.get('addressLocality')
+                                address_region = address_details.get('addressRegion')
+                                postal_code = address_details.get('postalCode')
+                                address_country = address_details.get('addressCountry')
+                                
+                                offer_details = json_ld_data[1]  # Assuming the second object contains offer details
+                                price_value = offer_details.get('offers', {}).get('price')
+                                
+                            except Exception as e:
+                                print(f"Error extracting JSON-LD data: {str(e)}")
+                                latitude = longitude = floor_size = price_value = number_of_rooms = None
+                                street_address = address_locality = address_region = postal_code = address_country = None
+                            
                             property_data = {
                                 'home_url': home_url,
                                 'image_link': image_link,
@@ -82,7 +194,17 @@ def scrape_redfin_properties(driver, url, json_filename, city_name):
                                 'beds': beds,
                                 'baths': baths,
                                 'area': area,
-                                'city': city_name
+                                'city': city_name,
+                                'latitude': latitude,
+                                'longitude': longitude,
+                                'floor_size': floor_size,
+                                'price_value': price_value,
+                                'number_of_rooms': number_of_rooms,
+                                'street_address': street_address,
+                                'address_locality': address_locality,
+                                'address_region': address_region,
+                                'postal_code': postal_code,
+                                'address_country': address_country
                             }
                             
                             append_to_json(property_data, json_filename)
@@ -188,14 +310,14 @@ try:
                     
                     if page < 8:
                         print("Waiting 5 seconds before next page...")
-                        time.sleep(5)
+                        time.sleep(2)
                 
                 except Exception as e:
                     print(f"Error on page {page} of {city_name}: {str(e)}")
                     continue
             
             print(f"Finished scraping {city_name}. Waiting 10 seconds before next city...")
-            time.sleep(10)
+            time.sleep(2)
             
         except Exception as e:
             print(f"Error processing city {base_url}: {str(e)}")

@@ -29,7 +29,8 @@ export const MainPage = () => {
   useEffect(() => {
     setFilteredData(homeData);
   }, [homeData]);
-  console.log("en", homeData?.length);
+  console.log("hn", homeData?.length);
+  console.log("sn", stateData?.length);
 
   const cityOptions = Array.from(
     new Set(
@@ -202,7 +203,7 @@ export const MainPage = () => {
               <Slider
                 range
                 min={0}
-                max={1000000}
+                max={10000000}
                 step={10000}
                 value={priceRange}
                 onChange={(value) => setPriceRange(value)}
@@ -239,10 +240,10 @@ export const MainPage = () => {
               <h2 className="text-xl font-semibold text-white mb-2">
                 {selectedCityData.city}, {selectedCityData.state}
               </h2>
-              <p className="text-gray-300 mb-2">
+              <p className="text-gray-300 mb-2 text-xl">
                 {selectedCityData.description}
               </p>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-xl">
                 <p className="text-white">
                   Average Price: {selectedCityData.average_price}
                 </p>
