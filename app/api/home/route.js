@@ -39,7 +39,7 @@ export async function GET() {
             home_url: home?.home_url,
             image_link: home?.image_link,
             address: home?.address,
-            city: getCityFromAddress(home?.address) || home?.city,
+            city: home?.city,
             price: home?.price,
             beds: home?.beds,
             baths: home?.baths,
