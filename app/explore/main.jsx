@@ -133,7 +133,7 @@ export const MainPage = () => {
   return (
     <div style={{ fontFamily: "Helvetica" }}>
       {!loading ? (
-        <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
+        <div className="px-6 pt-[80px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <AutoComplete
@@ -182,24 +182,9 @@ export const MainPage = () => {
                   style={inputStyle}
                 />
               </AutoComplete>
-
-              {/* <RangePicker
-                className="w-full"
-                size="large"
-                onChange={(dates) => {
-                  setDateRange(
-                    dates
-                      ? [dates[0].startOf("day"), dates[1].endOf("day")]
-                      : null
-                  );
-                }}
-                value={dateRange}
-                format="YYYY-MM-DD"
-                style={inputStyle}
-              /> */}
             </div>
             <div className="w-full max-w-4xl">
-              <p className="text-white mb-2">Price Range:</p>
+              <p className="text-white">Price Range:</p>
               <Slider
                 range
                 min={0}
@@ -211,12 +196,12 @@ export const MainPage = () => {
               />
             </div>
 
-            <div className="flex space-x-4 mt-1">
+            <div className="flex space-x-4">
               <Button
                 onClick={handleSearch}
                 type="default"
                 size="large"
-                className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                className="bg-green-600 text-white px-8"
                 style={{ fontFamily: "Helvetica" }}
               >
                 Search
@@ -225,7 +210,7 @@ export const MainPage = () => {
                 onClick={handleClearSearch}
                 type="default"
                 size="large"
-                className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                className="bg-green-600 text-white px-8"
                 style={{ fontFamily: "Helvetica" }}
               >
                 Clear
@@ -234,7 +219,7 @@ export const MainPage = () => {
           </div>
           {selectedCityData && (
             <div
-              className="w-full max-w-4xl mt-4 p-4 bg-gray-800 rounded-lg"
+              className="w-full max-w-4xl p-4 bg-gray-800 rounded-lg"
               style={{ fontFamily: "Helvetica" }}
             >
               <h2 className="text-xl font-semibold text-white mb-2">
@@ -257,7 +242,7 @@ export const MainPage = () => {
 
           <div
             className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4"
-            style={{ fontFamily: "inherit" }}
+            style={{ fontFamily: "Helvetica" }}
           >
             {filteredData.slice(0, displayCount).map((home, key) => (
               <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
@@ -273,9 +258,28 @@ export const MainPage = () => {
                       />
                     </div>
                     <div className="p-2 rounded-b-xl">
-                      <h1 className="text-2xl font-semibold text-white truncate">
-                        {home?.price}
-                      </h1>
+                      <div className="flex flex-row items-center justify-between">
+                        <h1 className="text-2xl font-semibold text-white">
+                          {home?.price}
+                        </h1>
+                        {home?.beds ? (
+                          <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                            {home?.beds}
+                          </span>
+                        ) : (
+                          <div></div>
+                        )}
+                        <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                          {home?.baths}
+                        </span>
+                        {home?.area ? (
+                          <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                            {home?.area} sq ft
+                          </span>
+                        ) : (
+                          <div></div>
+                        )}
+                      </div>
                       {home?.address ? (
                         <p className="text-xl text-gray-300 truncate">
                           {home?.address}
@@ -285,25 +289,13 @@ export const MainPage = () => {
                           <br></br>
                         </div>
                       )}
-
-                      <div className="flex justify-between items-center">
-                        {home?.beds ? (
-                          <span className="text-md bg-purple-800 text-white px-1 rounded-full">
-                            {home?.beds}
-                          </span>
-                        ) : (
-                          <div></div>
-                        )}
-                        <span className="text-md bg-purple-800 text-white px-1 rounded-full">
-                          {home?.baths}
-                        </span>
-                        {home?.area ? (
-                          <span className="text-md bg-purple-800 text-white px-1 rounded-full">
-                            {home?.area} sq ft
-                          </span>
-                        ) : (
-                          <div></div>
-                        )}
+                      <div className="flex flex-row items-center justify-center space-x-5">
+                        <h1 className="text-2xl font-semibold  bg-green-600 text-white px-2  rounded-full ">
+                          {home?.city}
+                        </h1>
+                        <h1 className="text-2xl font-semibold  bg-green-600 text-white px-2 rounded-full">
+                          {home?.country}
+                        </h1>
                       </div>
                     </div>
                   </Link>
@@ -317,7 +309,7 @@ export const MainPage = () => {
                 onClick={() => setDisplayCount((prevCount) => prevCount + 60)}
                 type="primary"
                 size="large"
-                className="text-white hover:text-violet-500 text-xl mb-10 hover:cursor-pointer"
+                className="text-white hover:text-green-500 text-xl mb-10 hover:cursor-pointer"
               >
                 More data
               </p>

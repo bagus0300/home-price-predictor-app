@@ -40,6 +40,7 @@ export async function GET() {
             image_link: home?.image_link,
             address: home?.address,
             city: home?.city,
+            country: home?.address_country,
             price: home?.price,
             beds: home?.beds,
             baths: home?.baths,

@@ -35,7 +35,7 @@ export const Navigation: React.FC = () => {
     <header style={{ fontFamily: "Helvetica" }} ref={ref}>
       <div
         className={classNames(
-          "fixed inset-x-0 top-0 z-50 backdrop-blur duration-200 border-b",
+          "fixed inset-x-0 top-0 z-50 bg-black duration-200 border-b",
           isIntersecting
             ? "bg-zinc-900/50 border-transparent"
             : "bg-zinc-900/500 border-zinc-800"
@@ -43,11 +43,9 @@ export const Navigation: React.FC = () => {
         <div className="container flex flex-row items-center py-4 mx-auto px-4">
           <Link
             href="/explore"
-            className="duration-200 text-green-500 hover:text-zinc-100 text-4xl md:text-5xl font-bold whitespace-nowra">
-            {/* World Home Price Predictor */}
-            WHPPor
+            className="duration-200 text-green-500 hover:text-zinc-100 text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+            World Home Price Predictor
           </Link>
-
           {/* Mobile menu button */}
           {/* <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}

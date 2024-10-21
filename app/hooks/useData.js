@@ -6,46 +6,60 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import moment from "moment";
-import axios from "axios";
 import { getHomeData } from "../../utils/gethomedata";
 import { getStateData } from "../../utils/getstatedata";
-import { Slice } from "lucide-react";
 
 const DataContext = createContext();
+
+const HOME_STORE = "homeData";
+const STATE_STORE = "stateData";
+const TIMESTAMP_KEY = "dataTimestamp";
 
 export const HomeDataProvider = ({ children }) => {
   const [homeData, setHomeData] = useState([]);
   const [stateData, setStateData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const saveToStorage = (key, data) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (error) {
+      console.error(`Error saving data to localStorage: ${error}`);
+    }
+  };
+
+  const getFromStorage = (key) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch (error) {
+      console.error(`Error retrieving data from localStorage: ${error}`);
+      return null;
+    }
+  };
+
   const getAllData = useCallback(async () => {
     setLoading(true);
     try {
-      // Check if we have cached data
-      const cachedHomeData = localStorage.getItem("cachedHomeData");
-      const cachedStateData = localStorage.getItem("cachedStateData");
-      const cachedTimestamp = localStorage.getItem("cachedTimestamp");
+      const cachedHomeData = getFromStorage(HOME_STORE);
+      const cachedStateData = getFromStorage(STATE_STORE);
+      const cachedTimestamp = getFromStorage(TIMESTAMP_KEY);
 
-      // If we have cached data and it's less than 1 hour old, use it
       if (
         cachedHomeData &&
-        cachedTimestamp &&
         cachedStateData &&
-        Date.now() - parseInt(cachedTimestamp) < 360000
+        cachedTimestamp &&
+        Date.now() - cachedTimestamp < 3600000 // 1 hour
       ) {
-        setHomeData(JSON.parse(cachedHomeData));
-        setStateData(JSON.parse(cachedStateData));
+        setHomeData(cachedHomeData);
+        setStateData(cachedStateData);
         setLoading(false);
         return;
       }
 
-      // Fetch  home data
       const prehomeData = await getHomeData();
       const prestateData = await getStateData();
-      console.log("======state data============", prestateData.slice(0, 3));
 
-      // Combine data
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -56,15 +70,14 @@ export const HomeDataProvider = ({ children }) => {
 
       const combinedData = shuffleArray(prehomeData);
 
-      // Cache the data and timestamp
-      localStorage.setItem("cachedHomeData", JSON.stringify(combinedData));
-      localStorage.setItem("cachedStateData", JSON.stringify(prestateData));
-      localStorage.setItem("cachedTimestamp", Date.now().toString());
+      saveToStorage(HOME_STORE, combinedData);
+      saveToStorage(STATE_STORE, prestateData);
+      saveToStorage(TIMESTAMP_KEY, Date.now());
 
       setHomeData(combinedData);
       setStateData(prestateData);
     } catch (error) {
-      console.error("Error fetching home data:", error);
+      console.error("Error fetching or caching data:", error);
     } finally {
       setLoading(false);
     }
