@@ -290,10 +290,10 @@ export const MainPage = () => {
                         </div>
                       )}
                       <div className="flex flex-row items-center justify-center space-x-5">
-                        <h1 className="text-2xl font-semibold  bg-green-600 text-white px-2  rounded-full ">
+                        <h1 className="text-xl bg-green-600 text-white px-2  rounded-full ">
                           {home?.city}
                         </h1>
-                        <h1 className="text-2xl font-semibold  bg-green-600 text-white px-2 rounded-full">
+                        <h1 className="text-xl bg-green-600 text-white px-2 rounded-full">
                           {home?.country}
                         </h1>
                       </div>
