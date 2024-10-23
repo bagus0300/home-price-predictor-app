@@ -49,11 +49,11 @@ export const MainPage = () => {
       const price = parseFloat(home?.price?.replace(/[^0-9.-]+/g, ""));
       return (
         (bedsSearchTerm === "" ||
-          home?.beds?.toLowerCase().includes(bedsSearchTerm.toLowerCase())) &&
+          home?.beds?.toLowerCase() === bedsSearchTerm.toLowerCase()) &&
         (bathsSearchTerm === "" ||
-          home?.baths?.toLowerCase().includes(bathsSearchTerm.toLowerCase())) &&
+          home?.baths?.toLowerCase() === bathsSearchTerm.toLowerCase()) &&
         (citySearchTerm === "" ||
-          home?.city?.toLowerCase().includes(citySearchTerm.toLowerCase())) &&
+          home?.city?.toLowerCase() === citySearchTerm.toLowerCase()) &&
         price >= priceRange[0] &&
         price <= priceRange[1]
       );
