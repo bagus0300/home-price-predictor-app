@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useData } from "../hooks/useData";
 import { AutoComplete, Input, Button, DatePicker, Slider } from "antd";
+import PriceRangeSlider from "@/app/components/slider";
 import axios from "axios";
 import moment from "moment";
 
@@ -19,7 +20,7 @@ export const MainPage = () => {
   const [bathsSearchTerm, setBathsSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
   const [dateRange, setDateRange] = useState(null);
-  const [priceRange, setPriceRange] = useState([0, 100000000]);
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
   const [options, setOptions] = useState([]);
   const [bOptions, setBOptions] = useState([]);
   const [displayCount, setDisplayCount] = useState(60);
@@ -31,6 +32,7 @@ export const MainPage = () => {
   }, [homeData]);
   console.log("hn", homeData?.length);
   console.log("sn", stateData?.length);
+  console.log("sn", stateData?.slice(0, 3));
 
   const cityOptions = Array.from(
     new Set(
@@ -60,14 +62,14 @@ export const MainPage = () => {
     setDisplayCount(60);
 
     if (citySearchTerm) {
-      const cityData = stateData.find(
-        (data) => data.city.toLowerCase() === citySearchTerm.toLowerCase()
-      );
+      const cityData = stateData.find((data) => data.city === citySearchTerm);
       setSelectedCityData(cityData);
     } else {
       setSelectedCityData(null);
     }
   };
+  console.log("=============citySearchTerm===============", citySearchTerm);
+  console.log("===========selectedCityData==============", selectedCityData);
 
   const handleClearSearch = () => {
     setBedsSearchTerm("");
@@ -78,7 +80,7 @@ export const MainPage = () => {
     setOptions([]); // Reset options for AutoComplete
     setBOptions([]);
     setDisplayCount(60);
-    setPriceRange([0, 100000000]);
+    setPriceRange([0, 10000000]);
     setSelectedCityData(null);
   };
 
@@ -131,7 +133,7 @@ export const MainPage = () => {
   };
 
   return (
-    <div style={{ fontFamily: "Helvetica" }}>
+    <div className="min-h-screen bg-black font-helvetica">
       {!loading ? (
         <div className="px-6 pt-[80px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
@@ -185,14 +187,11 @@ export const MainPage = () => {
             </div>
             <div className="w-full max-w-4xl">
               <p className="text-white">Price Range:</p>
-              <Slider
-                range
+              <PriceRangeSlider
                 min={0}
                 max={10000000}
-                step={10000}
                 value={priceRange}
-                onChange={(value) => setPriceRange(value)}
-                tooltip={(value) => `$${value.toLocaleString()}`}
+                onChange={setPriceRange}
               />
             </div>
 
@@ -290,10 +289,10 @@ export const MainPage = () => {
                         </div>
                       )}
                       <div className="flex flex-row items-center justify-center space-x-5">
-                        <h1 className="text-xl bg-green-600 text-white px-2  rounded-full ">
+                        <h1 className="text-lg bg-green-600 text-white px-2  rounded-full ">
                           {home?.city}
                         </h1>
-                        <h1 className="text-xl bg-green-600 text-white px-2 rounded-full">
+                        <h1 className="text-lg bg-green-600 text-white px-2 rounded-full">
                           {home?.country}
                         </h1>
                       </div>

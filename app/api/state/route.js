@@ -4,7 +4,11 @@ import path from "path";
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), "script", "state_data.json");
+    const filePath = path.join(
+      process.cwd(),
+      "script",
+      "home_analyze_data.json"
+    );
     const jsonData = await fs.readFile(filePath, "utf8");
     const stateData = JSON.parse(jsonData);
     const getCity = (location) => {
@@ -20,7 +24,7 @@ export async function GET() {
         return stateInfo.cities.map((city) => ({
           state,
           description: stateInfo?.state_description,
-          city: getCity(city?.city),
+          city: city?.city,
           average_price: city?.avg_list_price,
           sqft_price: city?.avg_price_per_sqft,
         }));
