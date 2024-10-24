@@ -137,7 +137,7 @@ export const MainPage = () => {
     <div className="min-h-screen bg-black font-helvetica">
       {!loading ? (
         <div className="px-6 pt-[80px] mx-auto max-w-[100rem] lg:px-8">
-          <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
+          <div className="flex flex-col items-center w-full space-y-3 p-2 rounded-lg shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full max-w-8xl">
               <AutoComplete
                 className="w-full"
@@ -231,7 +231,7 @@ export const MainPage = () => {
               </div>
             </div>
           )}
-          <div className="w-full h-px bg-zinc-800 my-4" />
+          <div className="w-full h-px bg-zinc-800 my-2" />
 
           <div
             className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4"
@@ -250,7 +250,7 @@ export const MainPage = () => {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
-                    <div className="p-2 rounded-b-xl">
+                    <div className="p-1 rounded-b-xl">
                       <div className="flex flex-row items-center justify-between">
                         <h1 className="text-2xl font-semibold text-white">
                           {home?.price}
@@ -282,7 +282,7 @@ export const MainPage = () => {
                           <br></br>
                         </div>
                       )}
-                      <div className="flex flex-row items-center justify-center space-x-2">
+                      <div className="flex flex-row items-center justify-center space-x-3">
                         <h1 className="text-lg bg-green-600 text-white px-6  rounded-full truncate">
                           {home?.city}
                         </h1>

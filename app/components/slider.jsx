@@ -45,7 +45,7 @@ const PriceRangeSlider = ({ min, max, value, onChange, className }) => {
   };
 
   return (
-    <div className={`flex flex-col space-y-6 w-full ${className}`}>
+    <div className={`flex flex-col space-y-1 w-full ${className}`}>
       <div className="relative w-full h-2">
         <div className="absolute w-full h-2 bg-gray-700 rounded-full" />
         <div
