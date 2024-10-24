@@ -13,6 +13,7 @@ import moment from "moment";
 const { RangePicker } = DatePicker;
 
 export const MainPage = () => {
+  const redfinLink = "www.redfin/com";
   const { homeData, stateData, loading } = useData();
 
   const [filteredData, setFilteredData] = useState(homeData);
@@ -305,7 +306,8 @@ export const MainPage = () => {
                 onClick={() => setDisplayCount((prevCount) => prevCount + 60)}
                 type="primary"
                 size="large"
-                className="text-white hover:text-green-500 text-xl mb-10 hover:cursor-pointer"
+                className="text-green-400 hover:text-green-500 text-xl mb-10 hover:cursor-pointer font-semibold"
+                style={{ fontFamily: "Helvetica" }}
               >
                 More data
               </p>
