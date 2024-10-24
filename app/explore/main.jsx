@@ -33,6 +33,7 @@ export const MainPage = () => {
   console.log("hn", homeData?.length);
   console.log("sn", stateData?.length);
   console.log("sn", stateData?.slice(0, 3));
+  console.log("hn", homeData?.slice(0, 3));
 
   const cityOptions = Array.from(
     new Set(
@@ -137,7 +138,7 @@ export const MainPage = () => {
       {!loading ? (
         <div className="px-6 pt-[80px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full max-w-8xl">
               <AutoComplete
                 className="w-full"
                 options={options}
@@ -184,36 +185,29 @@ export const MainPage = () => {
                   style={inputStyle}
                 />
               </AutoComplete>
+              <button
+                onClick={handleSearch}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 text-xl font-semibold"
+                style={{ fontFamily: "Helvetica" }}
+              >
+                Search
+              </button>
+              <button
+                onClick={handleClearSearch}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 text-xl font-semibold"
+                style={{ fontFamily: "Helvetica" }}
+              >
+                Clear
+              </button>
             </div>
-            <div className="w-full max-w-4xl">
-              <p className="text-white">Price Range:</p>
+            <div className="w-full max-w-7xl">
+              {/* <p className="text-white">Price Range:</p> */}
               <PriceRangeSlider
                 min={0}
                 max={10000000}
                 value={priceRange}
                 onChange={setPriceRange}
               />
-            </div>
-
-            <div className="flex space-x-4">
-              <Button
-                onClick={handleSearch}
-                type="default"
-                size="large"
-                className="bg-green-600 text-white px-8"
-                style={{ fontFamily: "Helvetica" }}
-              >
-                Search
-              </Button>
-              <Button
-                onClick={handleClearSearch}
-                type="default"
-                size="large"
-                className="bg-green-600 text-white px-8"
-                style={{ fontFamily: "Helvetica" }}
-              >
-                Clear
-              </Button>
             </div>
           </div>
           {selectedCityData && (
@@ -262,17 +256,17 @@ export const MainPage = () => {
                           {home?.price}
                         </h1>
                         {home?.beds ? (
-                          <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                          <span className="text-md bg-purple-600 text-white px-2 rounded-full truncate">
                             {home?.beds}
                           </span>
                         ) : (
                           <div></div>
                         )}
-                        <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                        <span className="text-md bg-orange-600 text-white px-2 rounded-full truncate">
                           {home?.baths}
                         </span>
                         {home?.area ? (
-                          <span className="text-md bg-green-600 text-white px-1 rounded-full">
+                          <span className="text-md bg-lime-500 text-white px-2 rounded-full truncate">
                             {home?.area} sq ft
                           </span>
                         ) : (
@@ -288,12 +282,15 @@ export const MainPage = () => {
                           <br></br>
                         </div>
                       )}
-                      <div className="flex flex-row items-center justify-center space-x-5">
-                        <h1 className="text-lg bg-green-600 text-white px-2  rounded-full ">
+                      <div className="flex flex-row items-center justify-center space-x-2">
+                        <h1 className="text-lg bg-green-600 text-white px-6  rounded-full truncate">
                           {home?.city}
                         </h1>
-                        <h1 className="text-lg bg-green-600 text-white px-2 rounded-full">
+                        <h1 className="text-lg bg-blue-600 text-white px-6 rounded-full">
                           {home?.country}
+                        </h1>
+                        <h1 className="text-lg bg-red-600 text-white px-6 rounded-full">
+                          {home?.source}
                         </h1>
                       </div>
                     </div>

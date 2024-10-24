@@ -46,15 +46,6 @@ const PriceRangeSlider = ({ min, max, value, onChange, className }) => {
 
   return (
     <div className={`flex flex-col space-y-6 w-full ${className}`}>
-      <div className="flex justify-between items-center">
-        <span className="text-white text-lg font-semibold">
-          {formatPrice(minValue)}
-        </span>
-        <span className="text-white text-lg font-semibold">
-          {formatPrice(maxValue)}
-        </span>
-      </div>
-
       <div className="relative w-full h-2">
         <div className="absolute w-full h-2 bg-gray-700 rounded-full" />
         <div
@@ -81,6 +72,14 @@ const PriceRangeSlider = ({ min, max, value, onChange, className }) => {
           onChange={handleMaxChange}
           className="absolute w-full h-2 appearance-none pointer-events-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-green-600 [&::-webkit-slider-thumb]:shadow-lg [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-green-600 [&::-moz-range-thumb]:shadow-lg"
         />
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-white text-lg font-semibold">
+          {formatPrice(minValue)}
+        </span>
+        <span className="text-white text-lg font-semibold">
+          {formatPrice(maxValue)}
+        </span>
       </div>
     </div>
   );
